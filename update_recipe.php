@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Mengatur query awal untuk mengubah data teks
     $update = "UPDATE recipes SET name='$name', htm='$htm', tutorial='$tutorial'";
 
-    // Pengecekan apakah file gambar baru diunggah atau tidak
+    // Jika tidak ada file gambar yang diunggah, tetap perbarui data teks
     if (!empty($_FILES['file']['name'])) {
         $targetDir = "uploads/";
         $fileName = uniqid().'_'.basename($_FILES['file']['name']);
@@ -22,12 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Jika file gambar baru diunggah, tambahkan pengubahan data gambar ke dalam query
         if (move_uploaded_file($_FILES['file']['tmp_name'], $targetFilePath)) {
-            $update .= ", image='$fileName'";   
+            $update .= ", image='$fileName'";
         }
     }
+    $update .= " WHERE id=$id";
 
     // Menambahkan kondisi WHERE untuk mengupdate resep dengan ID yang sesuai
-    $update .= " WHERE id=$id";
 
     if ($link->query($update) === TRUE) {
         echo json_encode(array('message' => 'Recipe updated successfully'));
@@ -35,5 +35,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(array('message' => 'Failed to update recipe'));
     }
 }
-
 ?>
