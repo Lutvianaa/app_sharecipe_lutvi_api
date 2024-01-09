@@ -8,10 +8,11 @@ if (isset($data['email']) && isset($data['password'])) {
     $name = $data['name'];
     $email = $data['email'];
     $password = $data['password'];
+    $role = 'User';
 
     // Validate $username and $password (sanitize inputs in a real-world scenario)
 
-    // Check if the username is already registered
+    // Check if the email is already registered
     $checkQuery = "SELECT * FROM users WHERE email = '$email'";
     $checkResult = $link->query($checkQuery);
 
@@ -20,7 +21,7 @@ if (isset($data['email']) && isset($data['password'])) {
         $response = array('status' => 'error', 'message' => 'Username already registered');
     } else {
         // Insert new user into the database
-        $insertQuery = "INSERT INTO users (name, email, password) VALUES ('$name','$email', sha1('$password'))";
+        $insertQuery = "INSERT INTO users (name, email, password, role) VALUES ('$name','$email', sha1('$password'), '$role')";
         if ($link->query($insertQuery) === TRUE) {
             // Registration successful
             $response = array('status' => 'success', 'message' => 'Registration successful');

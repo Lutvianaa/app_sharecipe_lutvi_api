@@ -16,19 +16,27 @@ if (isset($data['email']) && isset($data['password'])) {
     $query = "SELECT * FROM users WHERE email = '$email' AND password = sha1('$password')";
     $result = $link->query($query);
 
+    // Update login.php to include user role in the response
     if ($result->num_rows > 0) {
         // Authentication successful
         $user = $result->fetch_assoc();
+        $userRole = $user['role'];
 
         // Generate a JWT token
         $key = "koderahasia"; // Replace with your secret key
-        $token = JWT::encode(['user_id' => $user['id']], $key, 'HS256');
+        $token = JWT::encode(['user_id' => $user['id'], 'role' => $userRole], $key, 'HS256');
 
-        $response = array('status' => 'success', 'message' => 'Login successful', 'token' => $token);
+        $response = array(
+            'status' => 'success',
+            'message' => 'Login successful',
+            'token' => $token,
+            'role' => $userRole // Include user role in the response
+        );
     } else {
         // Authentication failed
         $response = array('status' => 'error', 'message' => 'Invalid username or password');
     }
+
 } else {
     // Invalid request
     $response = array('status' => 'error', 'message' => 'Invalid request');
