@@ -10,7 +10,6 @@ if (isset($data['email']) && isset($data['password'])) {
     $password = $data['password'];
     $role = 'User';
 
-    // Validate $username and $password (sanitize inputs in a real-world scenario)
 
     // Check if the email is already registered
     $checkQuery = "SELECT * FROM users WHERE email = '$email'";
